@@ -1,4 +1,4 @@
-class App_String {
+class AppString {
 
   /// Main App Strings
   static const  String AppTitle="Social Media App";
