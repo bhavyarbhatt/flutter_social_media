@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_social_media/common/app_string.dart';
-import 'package:get/get.dart';
-
 import 'dart:async';
+
+import 'package:flutter_social_media/pages/home_page.dart';
 
 void main() {
   runApp(MyApp());
@@ -11,18 +10,27 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(
-      title: AppString.AppTitle,
+    return MaterialApp(
+      title: 'Mobile App Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: WebMobileFrame(),
+      home: ResponsiveFrame(),
     );
   }
 }
 
-class WebMobileFrame extends StatefulWidget {
+class ResponsiveFrame extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final Size screenSize = MediaQuery.of(context).size;
+    const double breakpoint = 600;
 
+    return screenSize.width > breakpoint ? WebMobileFrame() : MobileContent();
+  }
+}
+
+class WebMobileFrame extends StatefulWidget {
   const WebMobileFrame({Key? key}) : super(key: key);
 
   @override
@@ -63,21 +71,19 @@ class _WebMobileFrameState extends State<WebMobileFrame> {
           width: 375, // iPhone X width
           height: 812, // iPhone X height
           decoration: BoxDecoration(
-            color: Colors.grey[100],
+            color: Colors.grey.shade50,
             borderRadius: BorderRadius.circular(40),
             border: Border.all(color: Colors.grey.shade800, width: 10),
           ),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(30),
-            child: Container(
-              height: 44,
-              color: Colors.white,
-              child: Column(
-                children: [
-
-                  /// Time Notch Tower,Wifi,Battery Icon
-
-                  Row(
+            child: Column(
+              children: [
+                // Status bar
+                Container(
+                  height: 44,
+                  color: Colors.white,
+                  child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Padding(
@@ -88,11 +94,10 @@ class _WebMobileFrameState extends State<WebMobileFrame> {
                         ),
                       ),
                       Container(
-                        margin: EdgeInsets.only(top: Get.width * 0.005),
                         width: 150,
                         height: 30,
                         decoration: BoxDecoration(
-                          color: Colors.black87,
+                          color: Colors.black,
                           borderRadius: BorderRadius.circular(15),
                         ),
                       ),
@@ -100,48 +105,35 @@ class _WebMobileFrameState extends State<WebMobileFrame> {
                         padding: const EdgeInsets.only(right: 16.0),
                         child: Row(
                           children: [
-                            Icon(Icons.signal_cellular_alt_2_bar_sharp, color: Colors.black, size: 16),
+                            Icon(Icons.signal_cellular_alt_2_bar_outlined, color: Colors.black, size: 16),
                             SizedBox(width: 4),
-                            Icon(Icons.network_wifi_3_bar, color: Colors.black, size: 16),
+                            Icon(Icons.wifi_2_bar, color: Colors.black, size: 16),
                             SizedBox(width: 4),
-                            Icon(Icons.battery_5_bar_sharp, color: Colors.black, size: 16),
+                            Icon(Icons.battery_2_bar, color: Colors.black, size: 16),
                           ],
                         ),
                       ),
-
-
                     ],
                   ),
-
-
-                  /// AppBar
-                  Container(
-                    color: Colors.blue,
-                    height: 56, // Default AppBar height
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        IconButton(
-                          icon: Icon(Icons.menu, color: Colors.white),
-                          onPressed: () {},
-                        ),
-                        Text(
-                          'App Bar Title',
-                          style: TextStyle(color: Colors.white, fontSize: 20),
-                        ),
-                        IconButton(
-                          icon: Icon(Icons.more_vert, color: Colors.white),
-                          onPressed: () {},
-                        ),
-                      ],
+                ),
+                // Main content
+                Expanded(
+                  child: MobileContent(),
+                ),
+                // Home indicator
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 8.0),
+                  child: Container(
+                    width: 135,
+                    height: 5,
+                    decoration: BoxDecoration(
+                      color: Colors.grey.withOpacity(0.5),
+                      borderRadius: BorderRadius.circular(2.5),
                     ),
                   ),
+                ),
+              ],
 
-
-
-
-                ],
-              ),
             ),
           ),
         ),
@@ -149,4 +141,6 @@ class _WebMobileFrameState extends State<WebMobileFrame> {
     );
   }
 }
+
+
 
