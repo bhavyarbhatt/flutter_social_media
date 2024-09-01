@@ -197,7 +197,6 @@ class PostCard extends StatelessWidget {
 
 
   PostCard({required this.post, required this.imageUrls});
-
   final PostController controller = Get.find();
 
   @override
