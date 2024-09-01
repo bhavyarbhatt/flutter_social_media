@@ -1,7 +1,9 @@
-import 'package:flutter/material.dart';
+
 import 'dart:async';
 
+import 'package:flutter/material.dart';
 import 'package:flutter_social_media/pages/home_page.dart';
+
 
 void main() {
   runApp(MyApp());
@@ -140,7 +142,16 @@ class _WebMobileFrameState extends State<WebMobileFrame> {
       ),
     );
   }
+
 }
 
 
+// Api Image
+// https://github.com/ozgrozer/100k-faces
 
+// Profile
+//https://dummyapi.online/api/social-profiles
+//https://dummyjson.com/users
+
+// SERACH TOOL
+//algolia.com
