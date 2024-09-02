@@ -21,16 +21,17 @@ class Post {
     bool isLiked = false,
   }) : isLiked = RxBool(isLiked);
 
-  // Corrected fromJson factory method
   factory Post.fromJson(Map<String, dynamic> json) {
     return Post(
-      userId: json['userId'] ?? '',
+      userId: json['userId'].toString(), // Convert to String
       profilePic: json['profilePic'] ?? '',
       fullName: json['fullName'] ?? '',
       username: json['username'] ?? '',
       joinedDate: json['joinedDate'] ?? '',
       bio: json['bio'] ?? '',
-      followersCount: json['followersCount'] ?? 0,
+      followersCount: json['followersCount'] is int
+          ? json['followersCount'] // Keep as int if already int
+          : int.tryParse(json['followersCount'].toString()) ?? 0, // Convert to int or default to 0
       isLiked: json['isLiked'] ?? false,
     );
   }

@@ -35,9 +35,14 @@ class FeedPage extends StatelessWidget {
             child: ListView.builder(
               itemCount: controller.posts.length,
               itemBuilder: (context, index) {
+                // Ensure we do not access out of bounds
+                String imageUrl = index < controller.imageUrls.length
+                    ? controller.imageUrls[index]
+                    : ''; // Provide a default or placeholder image URL if out of bounds
+
                 return PostCard(
                   post: controller.posts[index],
-                  imageUrls: controller.imageUrls, // Pass the imageUrls here
+                  imageUrl: imageUrl, // Pass the index here
                 );
               },
             ),
@@ -47,6 +52,7 @@ class FeedPage extends StatelessWidget {
     );
   }
 }
+
 
 // old ver-1 working
 
@@ -193,11 +199,9 @@ class FeedPage extends StatelessWidget {
 
 class PostCard extends StatelessWidget {
   final Post post;
-  final List<String> imageUrls; // List of image URLs
+  final String imageUrl; // Accept image URL as a parameter
 
-
-  PostCard({required this.post, required this.imageUrls});
-  final PostController controller = Get.find();
+  PostCard({required this.post, required this.imageUrl}); // Update constructor to accept index
 
   @override
   Widget build(BuildContext context) {
@@ -225,37 +229,34 @@ class PostCard extends StatelessWidget {
         children: [
           CircleAvatar(
             radius: 20,
-            // backgroundImage: NetworkImage(post.profilePic),
-            backgroundImage: NetworkImage(getRandomImageUrl()), // Get random image URL
+            // backgroundImage: NetworkImage(controller.imageUrls[index]), // Use the correct image URL
+          // ),
+            backgroundImage: imageUrl.isNotEmpty ? NetworkImage(imageUrl) : null, // Use imageUrl if available
+            child: imageUrl.isEmpty ? Icon(Icons.person) : null, // Placeholder icon if imageUrl is not available
           ),
           SizedBox(width: 12),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                post.fullName,
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-              ),
-              Text(
-                '@${post.username}',
-                style: TextStyle(color: Colors.grey, fontSize: 14),
-              ),
-              Text(
-                'Joined ${post.joinedDate}',
-                style: TextStyle(color: Colors.grey, fontSize: 12),
-              ),
-            ],
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  post.fullName,
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                ),
+                Text(
+                  '@${post.username}',
+                  style: TextStyle(color: Colors.grey, fontSize: 14),
+                ),
+                Text(
+                  'Joined ${post.joinedDate}',
+                  style: TextStyle(color: Colors.grey, fontSize: 12),
+                ),
+              ],
+            ),
           ),
         ],
       ),
     );
-
-
-  }
-
-  String getRandomImageUrl() {
-    final random = (imageUrls..shuffle()).first; // Get random image URL
-    return random;
   }
 
   Widget _buildContent() {
@@ -268,7 +269,7 @@ class PostCard extends StatelessWidget {
     );
   }
 
-  //   Widget _buildLikeBar() {
+  // Widget _buildLikeBar() {
   //   return Obx(() => GestureDetector(
   //     onTap: () => controller.toggleLike(post.userId),
   //     child: Container(
@@ -304,6 +305,7 @@ class PostCard extends StatelessWidget {
   //     ),
   //   ));
   // }
+
 }
 
 
