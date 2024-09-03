@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_social_media/common/Widgets/circleAvaster.dart';
 import 'package:flutter_social_media/controller/post_controller.dart';
 import 'package:get/get.dart';
 import '../../models/post_model.dart';
-
-
-// ver 1 working without api
 
 class FeedPage extends StatelessWidget {
   final PostController controller = Get.put(PostController());
@@ -30,19 +28,17 @@ class FeedPage extends StatelessWidget {
             ),
           );
         } else {
+          if (controller.posts.isEmpty) {
+            return Center(child: Text('No posts available.'));
+          }
+
           return RefreshIndicator(
             onRefresh: controller.refreshPosts,
             child: ListView.builder(
               itemCount: controller.posts.length,
               itemBuilder: (context, index) {
-                // Ensure we do not access out of bounds
-                String imageUrl = index < controller.imageUrls.length
-                    ? controller.imageUrls[index]
-                    : ''; // Provide a default or placeholder image URL if out of bounds
-
                 return PostCard(
                   post: controller.posts[index],
-                  imageUrl: imageUrl, // Pass the index here
                 );
               },
             ),
@@ -53,158 +49,32 @@ class FeedPage extends StatelessWidget {
   }
 }
 
-
-// old ver-1 working
-
-
-
-
-
-
-// class PostCard extends StatefulWidget {
-//   final Map<String, dynamic> post;
-//
-//   PostCard({required this.post});
-//
-//   @override
-//   _PostCardState createState() => _PostCardState();
-// }
-//
-// class _PostCardState extends State<PostCard> {
-//   bool isLiked = false;
-//
-//   void _toggleLike() {
-//     setState(() {
-//       isLiked = !isLiked;
-//     });
-//   }
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Card(
-//       color: AppColors.white,
-//       margin: EdgeInsets.symmetric(horizontal: 16),
-//       shape: RoundedRectangleBorder(
-//         side: BorderSide(color: Colors.black, width: 1),
-//         borderRadius: BorderRadius.circular(16),
-//       ),
-//       child: Column(
-//         crossAxisAlignment: CrossAxisAlignment.start,
-//         children: [
-//           _buildHeader(),
-//           _buildContent(),
-//           _buildImage(),
-//           _buildInteractionBar(),
-//         ],
-//       ),
-//     );
-//   }
-//
-//   Widget _buildHeader() {
-//     return Padding(
-//       padding: EdgeInsets.all(16),
-//       child: Row(
-//         children: [
-//           CircleAvatar(
-//             radius: 24,
-//             backgroundImage: NetworkImage(widget.post['profileImage']),
-//           ),
-//           SizedBox(width: 12),
-//           Expanded(
-//             child: Column(
-//               crossAxisAlignment: CrossAxisAlignment.start,
-//               children: [
-//                 Text(
-//                   widget.post['username'],
-//                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-//                 ),
-//                 Text(
-//                   widget.post['timeAgo'],
-//                   style: TextStyle(color: Colors.grey, fontSize: 12),
-//                 ),
-//               ],
-//             ),
-//           ),
-//           IconButton(
-//             icon: Icon(Icons.more_vert),
-//             onPressed: () {},
-//           ),
-//         ],
-//       ),
-//     );
-//   }
-//
-//   Widget _buildContent() {
-//     return Padding(
-//       padding: EdgeInsets.symmetric(horizontal: 16),
-//       child: Text(
-//         widget.post['caption'],
-//         style: TextStyle(fontSize: 16),
-//       ),
-//     );
-//   }
-//
-//   Widget _buildImage() {
-//     return Padding(
-//       padding: EdgeInsets.symmetric(vertical: 16),
-//       child: ClipRRect(
-//         borderRadius: BorderRadius.circular(8),
-//         child: Image.network(
-//           widget.post['postImage'],
-//           fit: BoxFit.cover,
-//           width: double.infinity,
-//         ),
-//       ),
-//     );
-//   }
-//
-//   Widget _buildInteractionBar() {
-//     return Container(
-//       decoration: BoxDecoration(
-//         color: AppColors.white,
-//         borderRadius: BorderRadius.only(
-//           bottomLeft: Radius.circular(16),
-//           bottomRight: Radius.circular(16),
-//         ),
-//       ),
-//       child: Padding(
-//         padding: EdgeInsets.all(16),
-//         child: Row(
-//           children: [
-//             GestureDetector(
-//               onTap: _toggleLike,
-//               child: Icon(
-//                 isLiked ? Icons.favorite : Icons.favorite_border,
-//                 color: isLiked ? Colors.red : Colors.black,
-//                 size: 28,
-//               ),
-//             ),
-//             SizedBox(width: 8),
-//             Text(
-//               '${widget.post['likes']}',
-//               style: TextStyle(fontSize: 16),
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }
-
-
-
-
-// ver-2 red color button ui updated
-
-
 class PostCard extends StatelessWidget {
   final Post post;
-  final String imageUrl; // Accept image URL as a parameter
 
-  PostCard({required this.post, required this.imageUrl}); // Update constructor to accept index
+
+  // List of unique person images
+  final Map<String, String>  userImages = {
+    'user1': 'https://images.unsplash.com/photo-1506801127838-8c8c5f1d4c4b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&q=80&w=200',
+    'user2': 'https://images.unsplash.com/photo-1517841905240-472988babdf9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&q=80&w=200',
+    'user3': 'https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&q=80&w=200',
+    'user4': 'https://images.unsplash.com/photo-1529655683824-7d5b2b0f4b9c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&q=80&w=200',
+    'user5': 'https://images.unsplash.com/photo-1501594907353-1a4c5b7d5b9b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&q=80&w=200',
+   'user6' :'https://images.unsplash.com/photo-1531498967926-7e4f1f6c8c5b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&q=80&w=200',
+   'user7' :'https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&q=80&w=200',
+   'user8' :'https://images.unsplash.com/photo-1518605738672-3e1c1f1b1e3d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&q=80&w=200',
+   'user9' :'https://images.unsplash.com/photo-1506801127838-8c8c5f1d4c4b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&q=80&w=200',
+    'user10':'https://images.unsplash.com/photo-1517841905240-472988babdf9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&q=80&w=200',
+  };
+
+
+  PostCard({required this.post});
 
   @override
   Widget build(BuildContext context) {
+    // Get the image URL based on the username
+    String imageUrl = userImages[post.username] ?? ''; // Use a default image if not found
+
     return Card(
       color: Colors.white,
       margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -214,25 +84,20 @@ class PostCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildHeader(),
-          _buildContent(),
-          // _buildLikeBar(),
+          _buildHeader(imageUrl),
+          _buildContent(imageUrl), // Pass the single image URL to _buildContent
         ],
       ),
     );
   }
 
-  Widget _buildHeader() {
+  Widget _buildHeader(String imageUrl) {
     return Padding(
       padding: EdgeInsets.all(16),
       child: Row(
         children: [
-          CircleAvatar(
-            radius: 20,
-            // backgroundImage: NetworkImage(controller.imageUrls[index]), // Use the correct image URL
-          // ),
-            backgroundImage: imageUrl.isNotEmpty ? NetworkImage(imageUrl) : null, // Use imageUrl if available
-            child: imageUrl.isEmpty ? Icon(Icons.person) : null, // Placeholder icon if imageUrl is not available
+          CircleAvatarWithFallback(
+            imageUrl: imageUrl, // Use the image URL associated with the username
           ),
           SizedBox(width: 12),
           Expanded(
@@ -259,56 +124,54 @@ class PostCard extends StatelessWidget {
     );
   }
 
-  Widget _buildContent() {
+  Widget _buildContent(String imageUrl) { // Accept imageUrl as a parameter
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 16),
-      child: Text(
-        post.bio,
-        style: TextStyle(fontSize: 14),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Display a single image for the post
+          Container(
+            height: 200, // Set a fixed height for the image
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(8.0),
+              child: Image.network(
+                imageUrl, // Use the same image for the post
+                width: double.infinity,
+                fit: BoxFit.cover,
+                errorBuilder: (BuildContext context, Object error, StackTrace? stackTrace) {
+                  return Container(
+                    color: Colors.grey, // Placeholder color
+                    child: Icon(Icons.error, color: Colors.white), // Fallback icon
+                  );
+                },
+              ),
+            ),
+          ),
+          SizedBox(height: 8),
+          Text(
+            post.bio,
+            style: TextStyle(fontSize: 14),
+          ),
+        ],
       ),
     );
   }
 
-  // Widget _buildLikeBar() {
-  //   return Obx(() => GestureDetector(
-  //     onTap: () => controller.toggleLike(post.userId),
-  //     child: Container(
-  //       decoration: BoxDecoration(
-  //         color: post.isLiked ? Colors.red : Colors.white,
-  //         borderRadius: BorderRadius.only(
-  //           bottomLeft: Radius.circular(16),
-  //           bottomRight: Radius.circular(16),
-  //         ),
-  //         border: post.isLiked ? null : Border.all(color: Colors.grey),
-  //       ),
-  //       child: Padding(
-  //         padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-  //         child: Row(
-  //           mainAxisAlignment: MainAxisAlignment.center,
-  //           children: [
-  //             Icon(
-  //               Icons.favorite,
-  //               color: post.isLiked ? Colors.white : Colors.grey,
-  //               size: 24,
-  //             ),
-  //             SizedBox(width: 8),
-  //             Text(
-  //               '${post.followersCount} followers',
-  //               style: TextStyle(
-  //                 fontSize: 16,
-  //                 color: post.isLiked ? Colors.white : Colors.black,
-  //               ),
-  //             ),
-  //           ],
-  //         ),
-  //       ),
-  //     ),
-  //   ));
-  // }
-
 }
 
+class CircleAvatarWithFallback extends StatelessWidget {
+  final String imageUrl;
 
-// ver-3 api
+  CircleAvatarWithFallback({required this.imageUrl});
 
-
+  @override
+  Widget build(BuildContext context) {
+    return CircleAvatar(
+      radius: 30,
+      backgroundColor: Colors.grey,
+      backgroundImage: imageUrl.isNotEmpty ? NetworkImage(imageUrl) : null,
+      child: imageUrl.isEmpty ? Icon(Icons.person, color: Colors.white) : null,
+    );
+  }
+}
