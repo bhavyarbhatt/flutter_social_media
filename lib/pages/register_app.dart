@@ -109,6 +109,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       onPressed: () {
                         // Handle Facebook registration
                       },
+
                       icon: SvgPicture.asset(
                         'assets/icons/twitter.svg',
                         width: 30,
