@@ -1,0 +1,31 @@
+Login Screen
+Home Feed
+User Profile
+Notifications
+Settings
+
+
+1. Splash Screen  --Done
+2. Login Screen  
+3. Registration Screen
+
+
+4. Home Feed
+5. Post Creation Screen
+6. User Profile
+7. Search Screen
+8. Notifications Screen
+9. Messages/Chat ScreenOption to send text, images, and voice messages.
+10. Settings Screen
+11. Explore/Discover Screen
+12. Stories Feature
+13. Video Player Screen
+14. Admin Dashboard (if applicable)
+15. Help/FAQ Screen
+16. Terms and Conditions/Privacy Policy Screen
+17. Onboarding Screens
+18. User Tagging Feature
+19. Content Moderation Alerts
+20. Feedback/Rating Screen
+
+create code taking refence form top 20 socail media app and ui guideline with good animation and fast app like client think the loading speeding is too fast and use navigation like              Navigator.of(context).pushNamed('/details'); and my logo path is assets/images/logo.webp

@@ -1,9 +1,7 @@
-
 import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_social_media/pages/home_page.dart';
-
+import 'package:flutter_social_media/pages/login_app.dart';
+import 'package:flutter_social_media/pages/register_app.dart';
 
 void main() {
   runApp(MyApp());
@@ -28,7 +26,7 @@ class ResponsiveFrame extends StatelessWidget {
     final Size screenSize = MediaQuery.of(context).size;
     const double breakpoint = 600;
 
-    return screenSize.width > breakpoint ? WebMobileFrame() : MobileContent();
+    return screenSize.width > breakpoint ? WebMobileFrame() : SplashScreen();
   }
 }
 
@@ -42,11 +40,13 @@ class WebMobileFrame extends StatefulWidget {
 class _WebMobileFrameState extends State<WebMobileFrame> {
   late Timer _timer;
   DateTime _currentTime = DateTime.now();
+  bool _isSplashCompleted = false;
 
   @override
   void initState() {
     super.initState();
     _timer = Timer.periodic(Duration(seconds: 1), (timer) => _updateTime());
+    _startSplashTimer(); // Start splash timer
   }
 
   @override
@@ -58,6 +58,14 @@ class _WebMobileFrameState extends State<WebMobileFrame> {
   void _updateTime() {
     setState(() {
       _currentTime = DateTime.now();
+    });
+  }
+
+  void _startSplashTimer() {
+    Timer(Duration(seconds: 3), () {
+      setState(() {
+        _isSplashCompleted = true; // Mark splash as completed after 3 seconds
+      });
     });
   }
 
@@ -107,20 +115,47 @@ class _WebMobileFrameState extends State<WebMobileFrame> {
                         padding: const EdgeInsets.only(right: 16.0),
                         child: Row(
                           children: [
-                            Icon(Icons.signal_cellular_alt_2_bar_outlined, color: Colors.black, size: 16),
+                            Icon(Icons.signal_cellular_alt_2_bar_outlined,
+                                color: Colors.black, size: 16),
                             SizedBox(width: 4),
-                            Icon(Icons.wifi_2_bar, color: Colors.black, size: 16),
+                            Icon(Icons.wifi_2_bar,
+                                color: Colors.black, size: 16),
                             SizedBox(width: 4),
-                            Icon(Icons.battery_2_bar, color: Colors.black, size: 16),
+                            Icon(Icons.battery_2_bar,
+                                color: Colors.black, size: 16),
                           ],
                         ),
                       ),
                     ],
                   ),
                 ),
-                // Main content
+                // Main content - Use a nested Navigator for all navigation
                 Expanded(
-                  child: MobileContent(),
+                  child: Navigator(
+                    onGenerateRoute: (settings) {
+                      WidgetBuilder builder;
+                      switch (settings.name) {
+                        case '/':
+                          builder = (BuildContext _) => _isSplashCompleted
+                              ? LoginScreen()
+                              : SplashScreen();
+                          break;
+                        case '/home':
+                          builder = (BuildContext _) => HomeScreen();
+                          break;
+
+
+                        case '/register':
+                          builder = (BuildContext _) => RegisterScreen();
+                          break;
+
+                        default:
+                          throw Exception('Invalid route: ${settings.name}');
+                      }
+                      return MaterialPageRoute(
+                          builder: builder, settings: settings);
+                    },
+                  ),
                 ),
                 // Home indicator
                 Padding(
@@ -135,23 +170,62 @@ class _WebMobileFrameState extends State<WebMobileFrame> {
                   ),
                 ),
               ],
-
             ),
           ),
         ),
       ),
     );
   }
-
 }
 
+// Splash Screen Widget
+class SplashScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Colors.blue, Colors.purple],
+            begin: Alignment.topRight,
+            end: Alignment.bottomLeft,
+          ),
+        ),
+        child: Center(
+          child: Image.asset(
+            'assets/images/logo.png', // Your primary logo path
+            width: 150,
+            height: 150,
+            errorBuilder: (BuildContext context, Object exception,
+                StackTrace? stackTrace) {
+              // If the logo is not found, display the default logo
+              return Icon(
+                Icons.flutter_dash, // Flutter logo icon
+                size: 150, // Size of the icon
+                color: Colors.white, // Color of the icon
+              );
+            },
+          ),
+        ));
+  }
+}
 
-// Api Image
-// https://github.com/ozgrozer/100k-faces
+// Home Screen Widget
+class HomeScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Home Screen'),
+      ),
+      body: Center(
+        child: ElevatedButton(
+          onPressed: () {
+            Navigator.of(context).pushNamed('/details');
+          },
+          child: Text('Go to Details'),
+        ),
+      ),
+    );
+  }
+}
 
-// Profile
-//https://dummyapi.online/api/social-profiles
-//https://dummyjson.com/users
-
-// SERACH TOOL
-//algolia.com
