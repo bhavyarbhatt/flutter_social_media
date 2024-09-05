@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter_social_media/pages/home_page.dart';
 import 'package:flutter_social_media/pages/login_app.dart';
 import 'package:flutter_social_media/pages/register_app.dart';
 
@@ -118,10 +119,10 @@ class _WebMobileFrameState extends State<WebMobileFrame> {
                             Icon(Icons.signal_cellular_alt_2_bar_outlined,
                                 color: Colors.black, size: 16),
                             SizedBox(width: 4),
-                            Icon(Icons.wifi_2_bar,
+                            Icon(Icons.wifi_lock_outlined,
                                 color: Colors.black, size: 16),
                             SizedBox(width: 4),
-                            Icon(Icons.battery_2_bar,
+                            Icon(Icons.battery_5_bar,
                                 color: Colors.black, size: 16),
                           ],
                         ),
@@ -140,15 +141,21 @@ class _WebMobileFrameState extends State<WebMobileFrame> {
                               ? LoginScreen()
                               : SplashScreen();
                           break;
-                        case '/home':
+
+                          case '/home':
                           builder = (BuildContext _) => HomeScreen();
                           break;
-
 
                         case '/register':
                           builder = (BuildContext _) => RegisterScreen();
                           break;
 
+                        case '/login':
+                          builder = (BuildContext _) => LoginScreen();
+                          break;
+
+
+//bbfc
                         default:
                           throw Exception('Invalid route: ${settings.name}');
                       }
@@ -192,7 +199,7 @@ class SplashScreen extends StatelessWidget {
         ),
         child: Center(
           child: Image.asset(
-            'assets/images/logo.png', // Your primary logo path
+            'assets/images/logo.webp', // Your primary logo path
             width: 150,
             height: 150,
             errorBuilder: (BuildContext context, Object exception,
@@ -206,26 +213,6 @@ class SplashScreen extends StatelessWidget {
             },
           ),
         ));
-  }
-}
-
-// Home Screen Widget
-class HomeScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Home Screen'),
-      ),
-      body: Center(
-        child: ElevatedButton(
-          onPressed: () {
-            Navigator.of(context).pushNamed('/details');
-          },
-          child: Text('Go to Details'),
-        ),
-      ),
-    );
   }
 }
 

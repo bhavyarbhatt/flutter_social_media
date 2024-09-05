@@ -11,12 +11,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
-  void _register(BuildContext context) {
-    // Simulate a registration process
-    Future.delayed(Duration(seconds: 2), () {
-      Navigator.of(context).pushNamed('/home');
-    });
-  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -70,7 +65,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 SizedBox(height: 20),
                 // Register Button
                 ElevatedButton(
-                  onPressed: () => _register(context),
+                  onPressed: () {
+                    Navigator.of(context).pushNamed('/home');
+                  },
                   child: Text('Register'),
                   style: ElevatedButton.styleFrom(
                     minimumSize: Size(double.infinity, 50),
@@ -138,6 +135,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     TextButton(
                       onPressed: () {
                         // Navigate to login screen
+
+                        Navigator.of(context).pushNamed('/login');
+
                       },
                       child: Text('Login'),
                     ),

@@ -4,13 +4,6 @@ class LoginScreen extends StatelessWidget {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
-  void _login(BuildContext context) {
-    // Simulate a login process
-    Future.delayed(Duration(seconds: 2), () {
-      Navigator.of(context).pushNamed('/home');
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -53,7 +46,9 @@ class LoginScreen extends StatelessWidget {
                 SizedBox(height: 20),
                 // Login Button
                 ElevatedButton(
-                  onPressed: () => _login(context),
+                  onPressed: () {
+                    Navigator.of(context).pushNamed('/home');
+                  },
                   child: Text('Login'),
                   style: ElevatedButton.styleFrom(
                     minimumSize: Size(double.infinity, 50),
