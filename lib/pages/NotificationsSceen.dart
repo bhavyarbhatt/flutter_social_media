@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_social_media/common/Widgets/drawer.dart';
 
-class NotificationsScreen extends StatelessWidget {
+class NotificationsScreen extends StatefulWidget {
+  @override
+  _NotificationsScreenState createState() => _NotificationsScreenState();
+}
+
+class _NotificationsScreenState extends State<NotificationsScreen> with SingleTickerProviderStateMixin {
   final List<NotificationItem> notifications = List.generate(
     20,
         (index) => NotificationItem(
@@ -13,27 +18,70 @@ class NotificationsScreen extends StatelessWidget {
     ),
   );
 
+  late AnimationController _controller;
+  late Animation<double> _fadeAnimation;
+  late Animation<double> _scaleAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 300), // Fast animation
+      vsync: this,
+    );
+
+    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: Curves.easeOut,
+      ),
+    );
+
+    _scaleAnimation = Tween<double>(begin: 0.8, end: 1.0).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: Curves.easeOut,
+      ),
+    );
+
+    // Start the animation
+    Future.delayed(Duration(milliseconds: 100), () {
+      _controller.forward();
+    });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  void _logout() {
+    Navigator.pushReplacementNamed(context, '/login'); // Example navigation
+  }
+
   @override
   Widget build(BuildContext context) {
-
-    void _logout() {
-      Navigator.pushReplacementNamed(context, '/login'); // Example navigation
-    }
-
     return Scaffold(
       appBar: AppBar(
         title: Text('Notifications'),
       ),
       drawer: CustomDrawer(onLogout: _logout), // Use the custom drawer here
 
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: ListView.separated(
-          itemCount: notifications.length,
-          separatorBuilder: (context, index) => SizedBox(height: 10),
-          itemBuilder: (context, index) {
-            return NotificationCard(notification: notifications[index]);
-          },
+      body: FadeTransition(
+        opacity: _fadeAnimation,
+        child: ScaleTransition(
+          scale: _scaleAnimation,
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: ListView.separated(
+              itemCount: notifications.length,
+              separatorBuilder: (context, index) => SizedBox(height: 10),
+              itemBuilder: (context, index) {
+                return NotificationCard(notification: notifications[index]);
+              },
+            ),
+          ),
         ),
       ),
     );
@@ -62,6 +110,26 @@ class NotificationCard extends StatelessWidget {
                 width: 50,
                 height: 50,
                 fit: BoxFit.cover,
+                loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+                  if (loadingProgress == null) {
+                    return child; // Image loaded
+                  }
+                  return Center(
+                    child: CircularProgressIndicator(
+                      value: loadingProgress.expectedTotalBytes != null
+                          ? loadingProgress.cumulativeBytesLoaded / (loadingProgress.expectedTotalBytes ?? 1)
+                          : null,
+                    ),
+                  );
+                },
+                errorBuilder: (BuildContext context, Object error, StackTrace? stackTrace) {
+                  return Image.asset(
+                    'assets/images/defualt_image.webp', // Replace with your default image path
+                    fit: BoxFit.cover,
+                    width: 50,
+                    height: 50,
+                  );
+                },
               ),
             ),
             SizedBox(width: 16),

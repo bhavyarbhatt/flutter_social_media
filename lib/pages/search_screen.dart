@@ -9,9 +9,46 @@ class SearchScreen extends StatefulWidget {
   _SearchScreenState createState() => _SearchScreenState();
 }
 
-class _SearchScreenState extends State<SearchScreen> {
+class _SearchScreenState extends State<SearchScreen> with SingleTickerProviderStateMixin {
   final TextEditingController _searchController = TextEditingController();
   List<ImageResult> _results = [];
+  late AnimationController _controller;
+  late Animation<double> _fadeAnimation;
+  late Animation<double> _scaleAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 300), // Fast animation
+      vsync: this,
+    );
+
+    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: Curves.easeOut,
+      ),
+    );
+
+    _scaleAnimation = Tween<double>(begin: 0.8, end: 1.0).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: Curves.easeOut,
+      ),
+    );
+
+    // Start the animation
+    Future.delayed(Duration(milliseconds: 100), () {
+      _controller.forward();
+    });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   Future<void> _searchImages(String query) async {
     if (query.isEmpty) return;
@@ -42,44 +79,48 @@ class _SearchScreenState extends State<SearchScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Search Images'),
-
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            TextField(
-              controller: _searchController,
-              decoration: InputDecoration(
-                labelText: 'Search',
-                suffixIcon: IconButton(
-                  icon: Icon(Icons.search),
-                  onPressed: () {
-                    _searchImages(_searchController.text);
-                  },
+      body: FadeTransition(
+        opacity: _fadeAnimation,
+        child: ScaleTransition(
+          scale: _scaleAnimation,
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              children: [
+                TextField(
+                  controller: _searchController,
+                  decoration: InputDecoration(
+                    labelText: 'Search',
+                    suffixIcon: IconButton(
+                      icon: Icon(Icons.search),
+                      onPressed: () {
+                        _searchImages(_searchController.text);
+                      },
+                    ),
+                  ),
                 ),
-              ),
-            ),
-            SizedBox(height: 16),
-            Expanded(
-              child: _results.isEmpty
-                  ? _buildEmptyState()
-                  : GridView.builder(
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  childAspectRatio: 1,
+                SizedBox(height: 16),
+                Expanded(
+                  child: _results.isEmpty
+                      ? _buildEmptyState()
+                      : GridView.builder(
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      childAspectRatio: 1,
+                    ),
+                    itemCount: _results.length,
+                    itemBuilder: (context, index) {
+                      return Image.network(_results[index].urls.small);
+                    },
+                  ),
                 ),
-                itemCount: _results.length,
-                itemBuilder: (context, index) {
-                  return Image.network(_results[index].urls.small);
-                },
-              ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
       drawer: CustomDrawer(onLogout: _logout), // Use the custom drawer here
-
     );
   }
 

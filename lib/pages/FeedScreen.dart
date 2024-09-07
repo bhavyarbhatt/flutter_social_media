@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_social_media/common/Widgets/drawer.dart';
+import 'package:http/http.dart' as http;
 
 class FeedScreen extends StatefulWidget {
   @override
   _FeedScreenState createState() => _FeedScreenState();
 }
 
-class _FeedScreenState extends State<FeedScreen> {
+class _FeedScreenState extends State<FeedScreen> with SingleTickerProviderStateMixin {
   // Sample data for posts
   List<Post> posts = List.generate(
     10,
@@ -17,19 +18,57 @@ class _FeedScreenState extends State<FeedScreen> {
     ),
   );
 
+  late AnimationController _controller;
+  late Animation<double> _fadeAnimation;
+  late Animation<double> _scaleAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 300), // Fast animation
+      vsync: this,
+    );
+
+    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: Curves.easeOut,
+      ),
+    );
+
+    _scaleAnimation = Tween<double>(begin: 0.8, end: 1.0).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: Curves.easeOut,
+      ),
+    );
+
+    // Start the animation
+    Future.delayed(Duration(milliseconds: 100), () {
+      _controller.forward();
+    });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
   void _addPost(Post post) {
     setState(() {
       posts.insert(0, post); // Add new post to the top of the list
     });
   }
 
+  void _logout() {
+    // Implement your logout logic here
+    Navigator.pushReplacementNamed(context, '/login'); // Example navigation
+  }
+
   @override
   Widget build(BuildContext context) {
-
-    void _logout() {
-      // Implement your logout logic here
-      Navigator.pushReplacementNamed(context, '/login'); // Example navigation
-    }
     return Scaffold(
       appBar: AppBar(
         title: Text('Feed'),
@@ -48,11 +87,17 @@ class _FeedScreenState extends State<FeedScreen> {
       ),
       drawer: CustomDrawer(onLogout: _logout), // Use the custom drawer here
 
-      body: ListView.builder(
-        itemCount: posts.length,
-        itemBuilder: (context, index) {
-          return PostCard(post: posts[index]);
-        },
+      body: FadeTransition(
+        opacity: _fadeAnimation,
+        child: ScaleTransition(
+          scale: _scaleAnimation,
+          child: ListView.builder(
+            itemCount: posts.length,
+            itemBuilder: (context, index) {
+              return PostCard(post: posts[index]);
+            },
+          ),
+        ),
       ),
     );
   }
@@ -88,6 +133,26 @@ class _PostCardState extends State<PostCard> {
               fit: BoxFit.cover,
               height: 200,
               width: double.infinity,
+              loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+                if (loadingProgress == null) {
+                  return child; // Image loaded
+                }
+                return Center(
+                  child: CircularProgressIndicator(
+                    value: loadingProgress.expectedTotalBytes != null
+                        ? loadingProgress.cumulativeBytesLoaded / (loadingProgress.expectedTotalBytes ?? 1)
+                        : null,
+                  ),
+                );
+              },
+              errorBuilder: (BuildContext context, Object error, StackTrace? stackTrace) {
+                return Image.asset(
+                  'assets/images/defualt_image.webp', // Replace with your default image path
+                  fit: BoxFit.cover,
+                  height: 200,
+                  width: double.infinity,
+                );
+              },
             ),
           ),
           Padding(
