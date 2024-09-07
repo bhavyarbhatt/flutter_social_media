@@ -137,8 +137,8 @@ class _SearchScreenState extends State<SearchScreen> with SingleTickerProviderSt
           ),
           SizedBox(height: 8),
           Text(
-            'Try searching for something else!',
-            style: TextStyle(fontSize: 16, color: Colors.grey),
+            'Try searching for anything!',
+            style: TextStyle(fontSize: 16, color: Colors.grey[50]),
           ),
           SizedBox(height: 16),
           Text(
@@ -149,10 +149,10 @@ class _SearchScreenState extends State<SearchScreen> with SingleTickerProviderSt
           Wrap(
             spacing: 8.0,
             children: [
-              _suggestionChip('Nature'),
+              _suggestionChip('Cities'),
               _suggestionChip('Technology'),
               _suggestionChip('Animals'),
-              _suggestionChip('Cities'),
+
             ],
           ),
         ],

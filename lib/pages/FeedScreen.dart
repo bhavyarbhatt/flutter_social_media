@@ -118,8 +118,12 @@ class _PostCardState extends State<PostCard> {
   @override
   Widget build(BuildContext context) {
     return Card(
+      color: Colors.white,
       elevation: 4,
       margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+
+
+
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -127,20 +131,26 @@ class _PostCardState extends State<PostCard> {
             borderRadius: BorderRadius.only(
               topLeft: Radius.circular(4),
               topRight: Radius.circular(4),
+
             ),
             child: Image.network(
               widget.post.imageUrl,
               fit: BoxFit.cover,
               height: 200,
               width: double.infinity,
-              loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+              loadingBuilder: (
+                  BuildContext context,
+                  Widget child,
+                  ImageChunkEvent? loadingProgress,
+                  ) {
                 if (loadingProgress == null) {
                   return child; // Image loaded
                 }
                 return Center(
                   child: CircularProgressIndicator(
                     value: loadingProgress.expectedTotalBytes != null
-                        ? loadingProgress.cumulativeBytesLoaded / (loadingProgress.expectedTotalBytes ?? 1)
+                        ? loadingProgress.cumulativeBytesLoaded /
+                        (loadingProgress.expectedTotalBytes ?? 1)
                         : null,
                   ),
                 );
@@ -156,7 +166,7 @@ class _PostCardState extends State<PostCard> {
             ),
           ),
           Padding(
-            padding: EdgeInsets.all(16),
+            padding: EdgeInsets.only(top: 16, left: 16, right: 16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -176,29 +186,43 @@ class _PostCardState extends State<PostCard> {
                   ),
                 ),
                 SizedBox(height: 16),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    IconButton(
-                      icon: Icon(
-                        Icons.thumb_up,
-                        color: isLiked ? Colors.red : Colors.grey,
-                      ),
-                      onPressed: () {
-                        setState(() {
-                          isLiked = !isLiked;
-                        });
-                      },
-                    ),
-                    Text('123'), // Placeholder for likes count
-                    Icon(Icons.comment, color: Colors.grey),
-                    Text('45'), // Placeholder for comments count
-                    Icon(Icons.share, color: Colors.grey),
-                  ],
-                ),
-              ],
+                ],
             ),
           ),
+
+          InkWell(
+            onTap: () {
+              setState(() {
+                isLiked = !isLiked;
+              });
+            },
+            child: Container(
+              decoration: BoxDecoration(
+                color: isLiked ? Colors.white : Colors.red, // Background color
+                borderRadius: BorderRadius.vertical(
+                    bottom: Radius.circular(10)
+
+                ), // Rounded bottom corners
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  IconButton(
+                    icon: Icon(
+                      Icons.favorite_border,
+                      color: isLiked ? Colors.red : Colors.white,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        isLiked = !isLiked;
+                      });
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ),
+
         ],
       ),
     );
@@ -255,7 +279,13 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
             SizedBox(height: 20),
             ElevatedButton(
               onPressed: _createPost,
-              child: Text('Post'),
+              child: Text(
+                'Post',
+                style: TextStyle(color: Colors.white), // Text color
+              ),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.black, // Background color
+              ),
             ),
           ],
         ),

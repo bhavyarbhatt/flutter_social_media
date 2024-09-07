@@ -1,8 +1,10 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter_social_media/pages/NotificationsSceen.dart';
 import 'package:flutter_social_media/pages/home_page.dart';
 import 'package:flutter_social_media/pages/login_app.dart';
 import 'package:flutter_social_media/pages/register_app.dart';
+import 'package:flutter_social_media/pages/search_screen.dart';
 
 void main() {
   runApp(MyApp());
@@ -155,6 +157,16 @@ class _WebMobileFrameState extends State<WebMobileFrame> {
                           break;
 
 
+                        case '/explore':
+                          builder = (BuildContext _) => SearchScreen();
+                          break;
+
+
+                        case '/notifications':
+                          builder = (BuildContext _) => NotificationsScreen();
+                          break;
+
+
 //bbfc
                         default:
                           throw Exception('Invalid route: ${settings.name}');
@@ -192,7 +204,7 @@ class SplashScreen extends StatelessWidget {
     return Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [Colors.blue, Colors.purple],
+            colors: [Colors.black, Colors.blueGrey],
             begin: Alignment.topRight,
             end: Alignment.bottomLeft,
           ),

@@ -44,29 +44,99 @@ class _CustomDrawerState extends State<CustomDrawer> with SingleTickerProviderSt
     return Drawer(
       child: SlideTransition(
         position: _slideAnimation,
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: [
-            DrawerHeader(
-              decoration: BoxDecoration(
-                color: Colors.deepPurple,
-              ),
-              child: Text(
-                'Menu',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 24,
+        child: Container(
+          color: Colors.white, // Background color
+          child: ListView(
+            padding: EdgeInsets.zero,
+            children: [
+              DrawerHeader(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    CircleAvatar(
+                      radius: 30,
+                      backgroundColor: Colors.grey[300], // Background color while loading
+                      child: ClipOval(
+                        child: Image.network(
+                          'https://via.placeholder.com/150', // Replace with your profile image URL
+                          fit: BoxFit.cover,
+                          width: 60,
+                          height: 60,
+                          loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+                            if (loadingProgress == null) {
+                              return child; // Image loaded
+                            }
+                            return Center(
+                              child: CircularProgressIndicator(
+                                value: loadingProgress.expectedTotalBytes != null
+                                    ? loadingProgress.cumulativeBytesLoaded / (loadingProgress.expectedTotalBytes ?? 1)
+                                    : null,
+                              ),
+                            );
+                          },
+                          errorBuilder: (BuildContext context, Object error, StackTrace? stackTrace) {
+                            return Image.asset(
+                              'assets/images/defualt_image.webp', // Replace with your default profile image path
+                              fit: BoxFit.cover,
+                              width: 60,
+                              height: 60,
+                            );
+                            // Navigate to notifications screen
+                          },
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    Text(
+                      'John Doe',
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      'johndoe@example.com',
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 14,
+                      ),
+                    ),
+                  ],
                 ),
               ),
-            ),
-            ListTile(
-              title: Text('Logout'),
-              onTap: () {
-                widget.onLogout(); // Call the logout function passed from the parent
-                Navigator.pop(context); // Close the drawer
-              },
-            ),
-          ],
+              ListTile(
+                leading: Icon(Icons.home, color: Colors.black),
+                title: Text('Feed', style: TextStyle(color: Colors.black)),
+                onTap: () {
+                  Navigator.of(context).pushNamed('/home');
+
+                },
+              ),
+              ListTile(
+                leading: Icon(Icons.search_rounded, color: Colors.black),
+                title: Text('Explore', style: TextStyle(color: Colors.black)),
+                onTap: () {
+                  Navigator.of(context).pushNamed('/explore');
+                },
+              ),
+              ListTile(
+                leading: Icon(Icons.notifications, color: Colors.black),
+                title: Text('Notifications', style: TextStyle(color: Colors.black)),
+                onTap: () {
+                  Navigator.of(context).pushNamed('/notifications');
+                },
+              ),
+              Divider(color: Colors.black),
+              ListTile(
+                leading: Icon(Icons.logout, color: Colors.black),
+                title: Text('Logout', style: TextStyle(color: Colors.black)),
+                onTap: () {
+                  Navigator.of(context).pushNamed('/login');
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );

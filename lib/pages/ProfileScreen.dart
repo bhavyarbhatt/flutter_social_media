@@ -11,7 +11,7 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
   final String profileImageUrl = 'https://picsum.photos/200'; // Change this to a valid URL for testing
   final String userName = 'John Doe';
   final String userBio = 'Flutter Developer | Tech Enthusiast | Coffee Lover';
-  final List<String> userInterests = ['Programming', 'Design', 'Music', 'Travel'];
+  final List<String> userInterests = ['Programming', 'Design', 'Music',];
 
   late AnimationController _controller;
   late Animation<double> _fadeAnimation;
@@ -153,7 +153,7 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
                     onPressed: () {
                       // Add your edit profile functionality here
                     },
-                    child: Text('Edit Profile'),
+                    child: Text('Edit Profile', style: TextStyle(color: Colors.black),),
                     style: ElevatedButton.styleFrom(
                       padding: EdgeInsets.symmetric(horizontal: 32, vertical: 12),
                     ),

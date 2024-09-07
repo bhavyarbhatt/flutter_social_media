@@ -107,10 +107,12 @@ class _RegisterScreenState extends State<RegisterScreen> with SingleTickerProvid
                       onPressed: () {
                         Navigator.of(context).pushNamed('/home');
                       },
-                      child: Text('Register'),
+                      child: Text('Register', style: TextStyle(color: Colors.white),),
                       style: ElevatedButton.styleFrom(
                         minimumSize: Size(double.infinity, 50),
+                        backgroundColor: Colors.black
                       ),
+
                     ),
                     SizedBox(height: 20),
                     // Divider
@@ -174,7 +176,7 @@ class _RegisterScreenState extends State<RegisterScreen> with SingleTickerProvid
                           onPressed: () {
                             Navigator.of(context).pushNamed('/login');
                           },
-                          child: Text('Login'),
+                          child: Text('Login', style: TextStyle(color: Colors.blueGrey),),
                         ),
                       ],
                     ),

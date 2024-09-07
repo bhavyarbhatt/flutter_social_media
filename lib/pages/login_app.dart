@@ -95,8 +95,9 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                       onPressed: () {
                         Navigator.of(context).pushNamed('/home');
                       },
-                      child: Text('Login'),
+                      child: Text('Login', style: TextStyle(color: Colors.white),),
                       style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.black,
                         minimumSize: Size(double.infinity, 50),
                       ),
                     ),
@@ -106,7 +107,9 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                       onPressed: () {
                         Navigator.of(context).pushNamed('/register');
                       },
-                      child: Text('Don\'t have an account? Register here'),
+                      child: Text('Don\'t have an account? Register here', style: TextStyle(
+                        color: Colors.blueGrey
+                      ),),
                     ),
                   ],
                 ),
