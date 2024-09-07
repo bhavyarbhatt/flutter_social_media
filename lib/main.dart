@@ -164,8 +164,7 @@ class _WebMobileFrameState extends State<WebMobileFrame> {
 
                         case '/notifications':
                           builder = (BuildContext _) => NotificationsScreen();
-                          break;
-
+                          break
 
 //bbfc
                         default:
